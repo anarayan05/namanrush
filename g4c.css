@@ -1,0 +1,20 @@
+#name {
+    text-align: center;
+    font-family:monospace;
+    font-size: 35px;
+    font-weight: lighter;
+}
+.header,p{
+    display: inline;
+}
+#start{
+    margin-left: 30px;
+}
+#lives{
+    opacity: 0;
+    margin-right: 30px;
+    margin-left: 400px;
+}
+#ammo{
+    opacity:0;
+}
