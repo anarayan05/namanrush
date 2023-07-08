@@ -12,7 +12,7 @@ var hit = 0;
 var runs = 0;
 var circlenum = 0;
 var lives = document.getElementById("lives");
-var bullet = 100;
+var bullet = 150;
 var shooters = [];
 var circlearray = [];
 var addcircles = [];
@@ -74,7 +74,7 @@ function startgame(phase){
     switch(phase){
         case 0:
             document.removeEventListener("keydown",fullstart);
-            for(var i=0;i<5;i++){   // circlearray[0]
+            for(var i=0;i<10;i++){   // circlearray[0]
                 var cx;
                 var cy;
                 var cd = (Math.random()*3)+1;
@@ -110,7 +110,7 @@ function startgame(phase){
             break;
         case 1:
             document.removeEventListener("keydown",fullstart);
-            for(var i=0;i<8;i++){   // circlearray[0]
+            for(var i=0;i<10;i++){   // circlearray[0]
                 var cx;
                 var cy;
                 var cd = Math.random()*5;
@@ -143,7 +143,7 @@ function startgame(phase){
         //in this phase the other circles will shoot
         case 2:
             document.removeEventListener("keydown",fullstart);
-            for(var i=0;i<8;i++){   // circlearray[0]
+            for(var i=0;i<10;i++){   // circlearray[0]
                 var cx;
                 var cy;
                 var cd = Math.random()*5;
@@ -178,10 +178,48 @@ function startgame(phase){
             }
             oppshot = setInterval(oppshooters,1000);
             break;
+        case 3:
+            document.removeEventListener("keydown",fullstart);
+            for(var i=0;i<15;i++){   // circlearray[0]
+                var cx;
+                var cy;
+                var cd = 5
+                var cradius = Math.random()*20+10; 
+                var color = "purple" ;
+                var dir = (Math.floor(Math.random()*4)+1);
+                // circlearray.push(new Circle(cx,cy,cradius,cd,color,dir));
+                if(dir == 1){
+                    cx = (Math.random()*5)-10;
+                    cy = (Math.random()*325)+50
+                    circlearray.push(new Circle(cx,cy,cradius,cd,color,dir));
+                }
+                else if(dir == 2){
+                    cx = (Math.random()*5)+canvas.width;
+                    cy = (Math.random()*325)+50
+                    circlearray.push(new Circle(cx,cy,cradius,cd,color,dir));
+                    lucknum = Math.random()*10;
+                }
+                else if(dir == 3){
+                    cx = Math.random()*canvas.width;
+                    cy = (Math.random()*5)-10;
+                    circlearray.push(new Circle(cx,cy,cradius,cd,color,dir));
+                    lucknum = Math.random()*10;
+                }
+                else if(dir == 4){
+                    cx = Math.random()*canvas.width;
+                    cy = (Math.random()*5)+425;
+                    circlearray.push(new Circle(cx,cy,cradius,cd,color,dir));
+                    lucknum = Math.random()*10;
+                }
+                circlenum++
+            }
+            oppshot = setInterval(oppshooters,1000);
+            break;
     }
+    
 }
 
-user_circle = new Circle(200,200,30,3,"green",0)
+user_circle = new Circle(600,200,30,3,"green",0)
 
 //functions for circles to move, and make proper animation
 
@@ -255,11 +293,12 @@ function movegame(){
         collision(circlearray[i])
     }
     if(hit == circlenum){
+        clearbullets(opps.length-1,shooters.length-1)
         circlenum = 0;
         phasefactor++
         user_circle.dir = 0;
         clearcircle(user_circle);
-        user_circle.cx = 250;
+        user_circle.cx = 600;
         user_circle.cy = 200;
         document.removeEventListener('keydown',controller)
         document.removeEventListener('keydown',shcontroller)
@@ -271,6 +310,10 @@ function movegame(){
         drawgame(user_circle)
     }
     else if(phasefactor==3){
+        drawgame(user_circle)
+        start.innerHTML = "Phase 4: Final Battle"
+    }
+    else{
         endgame(opps.length-1,shooters.length-1, "YOU WON! Press Space to Restart")
     }
 }
@@ -401,6 +444,19 @@ function collision(my_circle){
     
 }
 
+function clearbullets(oppnum,shnum){
+    while(oppnum>0){
+        clearcircle(opps[oppnum])
+        delete opps[oppnum]
+        opps.splice(oppnum,1);
+    }
+    while(shnum>0){
+        clearcircle(shooters[shnum]);
+        delete shooters[shnum];
+        shooters.splice(shnum,1);
+    }
+}
+
 //endgame screen
 
 function endgame(oppnum, shnum, message){
@@ -416,16 +472,7 @@ function endgame(oppnum, shnum, message){
 	phasefactor = 0
     document.removeEventListener('keydown',controller)
     document.removeEventListener('keydown',shcontroller)
-    while(oppnum>0){
-        clearcircle(opps[oppnum])
-        delete opps[oppnum]
-        circlearray.splice(oppnum,1);
-    }
-    while(shnum>0){
-        clearcircle(shooters[shnum]);
-        delete shooters[shnum];
-        circlearray.splice(shnum,1);
-    }
+    clearbullets(oppnum,shnum);
 }
 
 //circles to move
@@ -560,11 +607,25 @@ function fullstart(e){
                 hit = 0;
             }
         }
+        else if(start.style.opacity = 1 && start.innerHTML == "Phase 4: Final Battle"){
+            start.style.opacity = 0;
+            document.addEventListener('keydown', controller);
+            if(bullet>0){
+                document.addEventListener('keydown',shcontroller)
+            }
+            clearInterval(oppshot)
+            startgame(phasefactor);
+            for(var i=0;i<circlearray.length;i++){
+                drawgame(circlearray[i]);
+                collision(circlearray[i]);
+                hit = 0;
+            }
+        }
         else if(start.style.opacity = 1 && start.innerHTML == "Game Over, Press Space to Restart" || start.innerHTML == "YOU WON! Press Space to Restart"){
             console.log(circlenum)
             phasefactor = 0
             circlenum = 0;
-            bullet = 100;
+            bullet = 150;
             ammo.innerHTML = "Bullets: " + bullet;
             lives.innerHTML
             collisionfact = 0;
@@ -574,7 +635,7 @@ function fullstart(e){
             document.removeEventListener('keydown',shcontroller)
             clearcircle(user_circle);
             console.log(circlearray)
-            user_circle = new Circle(200,200,30,3,"green",0)
+            user_circle = new Circle(600,200,30,3,"green",0)
 		//Find a way to simplify this code segment
             for(var i=0;i<circlearray.length;i++){
                 clearcircle(circlearray[i])
