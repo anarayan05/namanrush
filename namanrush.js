@@ -1,5 +1,3 @@
-//Current goal: restart game after dead or game over, go to fullstart function
-//make sure user circle position is back to normal
 
 var canvas = document.getElementById("gamecanvas");
 var start = document.getElementById("start")
@@ -82,7 +80,6 @@ function startgame(phase){
                 var color = "blue" ;
                 var dir = (Math.floor(Math.random()*4)+1);
 
-                //do not initiate cx and cy above when retrying pseudo below
 
                 if(dir == 1){
                     cx = (Math.random()*5)-10;
@@ -187,7 +184,6 @@ function startgame(phase){
                 var cradius = Math.random()*20+10; 
                 var color = "purple" ;
                 var dir = (Math.floor(Math.random()*4)+1);
-                // circlearray.push(new Circle(cx,cy,cradius,cd,color,dir));
                 if(dir == 1){
                     cx = (Math.random()*5)-10;
                     cy = (Math.random()*325)+50
@@ -314,6 +310,7 @@ function movegame(){
         start.innerHTML = "Phase 4: Final Battle"
     }
     else{
+        clearInterval(oppshot)
         endgame(opps.length-1,shooters.length-1, "YOU WON! Press Space to Restart")
     }
 }
@@ -355,7 +352,7 @@ function bulletcoll(bulletcircle){
 
 }
 
-//FIX THIS WHOLE THING V
+//when opp hits user circle
 
 function oppcoll(bulletcircle){
     var difx = bulletcircle.cx - user_circle.cx
@@ -444,20 +441,26 @@ function collision(my_circle){
     
 }
 
+//clearing bullets between phases
+
 function clearbullets(oppnum,shnum){
     while(oppnum>0){
         clearcircle(opps[oppnum])
         delete opps[oppnum]
         opps.splice(oppnum,1);
+        oppnum = oppnum-1
     }
     while(shnum>0){
         clearcircle(shooters[shnum]);
         delete shooters[shnum];
         shooters.splice(shnum,1);
+        shnum = shnum-1
+        console.log(shnum)
     }
+    console.log("hi")
 }
 
-//endgame screen
+//endgame (stopping everything)
 
 function endgame(oppnum, shnum, message){
     lives.innerHTML = "Lives: 0";
@@ -468,7 +471,9 @@ function endgame(oppnum, shnum, message){
     clearInterval(asint);
     clearInterval(aoint);
 	clearInterval(changedir);
-    clearInterval(oppshot);
+    if(phasefactor == 2 || phasefactor ==3){
+        clearInterval(oppshot)
+    }
 	phasefactor = 0
     document.removeEventListener('keydown',controller)
     document.removeEventListener('keydown',shcontroller)
@@ -532,11 +537,11 @@ function controller(e){
 };
 
 
-//when bullets run out
+//when bullets run out (game over)
 function empty(){
     if(bullet == 0){
         document.removeEventListener('keydown',shcontroller);
-        endgame(opps.length-1, shooters.length-1,"Game Over, Press Space to Restart");
+        endgame(opps.length, shooters.length,"Game Over, Press Space to Restart");
     }
     ammo.innerHTML = "Bullets: " + bullet;
 }
@@ -636,14 +641,12 @@ function fullstart(e){
             clearcircle(user_circle);
             console.log(circlearray)
             user_circle = new Circle(600,200,30,3,"green",0)
-		//Find a way to simplify this code segment
+		//clearing circles after game over, not worth it to make function
             for(var i=0;i<circlearray.length;i++){
                 clearcircle(circlearray[i])
                 delete circlearray[i];
+                circlearray.splice(i,1);
                 console.log(circlearray)
-            }
-            for(var j=0;j<circlearray.length;i++){
-                circlearray.splice(j,1);
             }
             start.innerHTML = "Press Space to Start"
         }
