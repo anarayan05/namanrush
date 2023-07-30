@@ -1,4 +1,3 @@
-
 var canvas = document.getElementById("gamecanvas");
 var start = document.getElementById("start")
 var ammo = document.getElementById("ammo");
@@ -343,7 +342,6 @@ function bulletcoll(bulletcircle){
             clearcircle(circlearray[a])
             delete circlearray[a];
             circlearray.splice(a,1);
-            console.log(hit);
             clearcircle(bulletcircle);
 			delete shooters[p];
 			shooters.splice(p,1)
@@ -447,17 +445,15 @@ function clearbullets(oppnum,shnum){
     while(oppnum>0){
         clearcircle(opps[oppnum])
         delete opps[oppnum]
-        opps.splice(oppnum,1);
         oppnum = oppnum-1
     }
+    opps = []
     while(shnum>0){
         clearcircle(shooters[shnum]);
         delete shooters[shnum];
-        shooters.splice(shnum,1);
         shnum = shnum-1
-        console.log(shnum)
     }
-    console.log("hi")
+    shooters = []
 }
 
 //endgame (stopping everything)
@@ -546,8 +542,6 @@ function empty(){
     ammo.innerHTML = "Bullets: " + bullet;
 }
 
-document.addEventListener('keydown',shcontroller)
-
 
 //all controls for shooting
 function shcontroller(e){
@@ -576,9 +570,6 @@ function shcontroller(e){
 }
 
 //Try to add spacebar to prompt game VV: DONE, silly mistake btw
-var setgame;
-var asint;
-var aoint;
 
 document.addEventListener("keydown",fullstart);
 
@@ -590,26 +581,23 @@ function fullstart(e){
             lives.style.opacity = "1"
             ammo.style.opacity = "1"
             document.addEventListener('keydown', controller);
-            document.addEventListener('keydown',shcontroller);
+            document.addEventListener('keydown',shcontroller)
             startgame(phasefactor);
             //setting movement for circles
             setgame = setInterval(movegame,30);
             //checking for bullets and setting movement
             asint = setInterval(activateshot,5);
             aoint = setInterval(activateopps,5);
-            //Clock stops, because this code only runs when button pressed, so clearInterval works in startgame
         }
         else if(start.style.opacity = 1 && start.innerHTML == "Press Space to Advance"){
             start.style.opacity = 0;
             document.addEventListener('keydown', controller);
-            if(bullet>0){
-                document.addEventListener('keydown',shcontroller)
-            }
+            document.addEventListener('keydown',shcontroller);
             startgame(phasefactor);
+            hit = 0;
             for(var i=0;i<circlearray.length;i++){
                 drawgame(circlearray[i]);
                 collision(circlearray[i]);
-                hit = 0;
             }
         }
         else if(start.style.opacity = 1 && start.innerHTML == "Phase 4: Final Battle"){
@@ -620,15 +608,13 @@ function fullstart(e){
             }
             clearInterval(oppshot)
             startgame(phasefactor);
+            hit = 0;
             for(var i=0;i<circlearray.length;i++){
                 drawgame(circlearray[i]);
                 collision(circlearray[i]);
-                hit = 0;
             }
         }
         else if(start.style.opacity = 1 && start.innerHTML == "Game Over, Press Space to Restart" || start.innerHTML == "YOU WON! Press Space to Restart"){
-            console.log(circlenum)
-            phasefactor = 0
             circlenum = 0;
             bullet = 150;
             ammo.innerHTML = "Bullets: " + bullet;
@@ -639,15 +625,13 @@ function fullstart(e){
             document.removeEventListener('keydown',controller)
             document.removeEventListener('keydown',shcontroller)
             clearcircle(user_circle);
-            console.log(circlearray)
             user_circle = new Circle(600,200,30,3,"green",0)
 		//clearing circles after game over, not worth it to make function
             for(var i=0;i<circlearray.length;i++){
                 clearcircle(circlearray[i])
                 delete circlearray[i];
-                circlearray.splice(i,1);
-                console.log(circlearray)
             }
+            circlearray = []
             start.innerHTML = "Press Space to Start"
         }
     }
