@@ -1,14 +1,7 @@
-//naman images in progress
-//just delete image code if not good
-
-
-
 var canvas = document.getElementById("gamecanvas");
 var start = document.getElementById("start")
 var ammo = document.getElementById("ammo");
-var highscore = document.getElementById("highscore");
 var d = canvas.getContext("2d");
-var naman = document.getElementById("naman");
 var collisionfact = 0;
 var hit = 0;
 var runs = 0;
@@ -222,7 +215,6 @@ function startgame(phase){
 
 //
 user_circle = new Circle(600,200,30,3,"green",0)
-d.drawImage(naman,600,200)
 //
 
 //functions for circles to move, and make proper animation
@@ -585,7 +577,7 @@ document.addEventListener("keydown",fullstart);
 //startgame
 function fullstart(e){
     if(e.keyCode==32){
-        if(start.style.opacity = 1 && start.innerHTML == "Press Space to Start"){
+        if(start.style.opacity = 1 && start.innerHTML == "Use Arrow keys for moving and WASD keys for shooting. Press Space to Start!"){
             start.style.opacity = 0;
             lives.style.opacity = "1"
             ammo.style.opacity = "1"
@@ -641,7 +633,7 @@ function fullstart(e){
                 delete circlearray[i];
             }
             circlearray = []
-            start.innerHTML = "Press Space to Start"
+            start.innerHTML = "Use Arrow keys for moving and WASD keys for shooting. Press Space to Start!"
         }
     }
 
