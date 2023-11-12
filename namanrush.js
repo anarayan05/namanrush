@@ -1,9 +1,14 @@
+//naman images in progress
+//just delete image code if not good
+
+
+
 var canvas = document.getElementById("gamecanvas");
 var start = document.getElementById("start")
 var ammo = document.getElementById("ammo");
 var highscore = document.getElementById("highscore");
-var c = canvas.getContext("2d");
 var d = canvas.getContext("2d");
+var naman = document.getElementById("naman");
 var collisionfact = 0;
 var hit = 0;
 var runs = 0;
@@ -214,21 +219,25 @@ function startgame(phase){
     
 }
 
+
+//
 user_circle = new Circle(600,200,30,3,"green",0)
+d.drawImage(naman,600,200)
+//
 
 //functions for circles to move, and make proper animation
 
 function offset(my_circle){
-    c.beginPath();
-    c.arc(my_circle.cx,my_circle.cy,my_circle.cradius,0,Math.PI*2,false);
-    c.fillStyle = my_circle.color;
-    c.fill();
+    d.beginPath();
+    d.arc(my_circle.cx,my_circle.cy,my_circle.cradius,0,Math.PI*2,false);
+    d.fillStyle = my_circle.color;
+    d.fill();
 }
 function clearcircle(my_circle){
-    c.beginPath();
-    c.arc(my_circle.cx,my_circle.cy,my_circle.cradius+1,0,Math.PI*2,false);
-    c.fillStyle = "white";
-    c.fill();
+    d.beginPath();
+    d.arc(my_circle.cx,my_circle.cy,my_circle.cradius+1,0,Math.PI*2,false);
+    d.fillStyle = "white";
+    d.fill();
 }
 
 
